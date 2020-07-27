@@ -1,0 +1,10 @@
+# node
+node_modules/
+
+# database
+database/logs.json
+database/main.db
+database/patch.sql
+
+# env
+.env

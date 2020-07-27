@@ -1,0 +1,23 @@
+{
+  "name": "gad2",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "start": "node -r esm ./index.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "MIT",
+  "type": "module",
+  "dependencies": {
+    "axios": "^0.19.2",
+    "discord.js": "^12.2.0",
+    "dotenv": "^8.2.0",
+    "esm": "^3.2.25",
+    "express": "^4.17.1",
+    "opusscript": "0.0.7",
+    "shell-quote": "^1.7.2",
+    "sqlite-async": "^1.1.0"
+  }
+}
