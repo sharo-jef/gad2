@@ -3,7 +3,7 @@ import fs from 'fs'
 import { Client } from 'discord.js'
 import dotenv from 'dotenv'
 import express from 'express'
-import sqlite from 'sqlite-async'
+// import sqlite from 'sqlite-async'
 
 import Command from './command.js'
 import FileSender from './fileSender.js'
@@ -100,7 +100,7 @@ client.login(process.env.TOKEN);
 
 export {
     client,
-    sqlite,
+    // sqlite,
     Command,
     Parser,
 };
