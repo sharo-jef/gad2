@@ -14,6 +14,8 @@ dotenv.config();
 const app = express();
 const listener = app.listen(process.env.PORT || 8080, () => console.log(`listening on port ${listener.address().port}`));
 
+app.get('/', (req, res) => res.send('OK'));
+
 /**
  * @type {Command[]}
  */
