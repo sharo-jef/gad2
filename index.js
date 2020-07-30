@@ -3,7 +3,7 @@ import fs from 'fs'
 import { Client } from 'discord.js'
 import dotenv from 'dotenv'
 import express from 'express'
-// import sqlite from 'sqlite-async'
+import sqlite from 'sqlite-async'
 
 import Command from './command.js'
 import FileSender from './fileSender.js'
@@ -51,7 +51,6 @@ client.on('message', async message => {
     for (let i = 0; i < args.length; i++) {
         const [argv, end, op] = Parser.parseSingle(args, i);
         i = end;
-        console.log(argv, end, op);
 
         switch (op.op) {
         case ';':
@@ -102,7 +101,7 @@ client.login(process.env.TOKEN);
 
 export {
     client,
-    // sqlite,
+    sqlite,
     Command,
     Parser,
 };
