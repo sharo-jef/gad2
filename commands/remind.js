@@ -1,6 +1,6 @@
 import moment from 'moment-timezone'
 
-import { Command } from '../index.js'
+import { Command, discord, sqlite } from '../index.js'
 
 export default class RemindCommand extends Command {
     name = 'remind';
@@ -35,7 +35,7 @@ date:
         const options = {
             timezone: 'Asia/Tokyo',
             message: '',
-            channel: '',
+            channel: message.channel,
         };
 
         let date = null;
@@ -55,11 +55,14 @@ date:
                 options.timezone = argv[++i];
             default:
                 date = moment.tz(argv[i++], options.timezone).unix() * 1000;
-                console.log(date);
             }
         }
 
-        const result = '';
+        const db = await sqlite.open(`${process.cwd()}/database/main.db`);
+        const {id} = await db.get('select max(id) as id from remind').catch(console.error);
+        console.log([id + 1, `${options.channel}`, `${date}`, false, options.message]);
+        await db.run('insert into remind values (?, ?, ?, ?, ?)', [id + 1, `${options.channel}`, `${date}`, false, options.message]).catch(console.error);
+        const result = `set reminder(#${id + 1}) at ${new Date(date)} to ${options.channel}`;
 
         return result;
     }

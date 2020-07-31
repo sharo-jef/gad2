@@ -1,6 +1,6 @@
 import fs from 'fs'
 
-import { Client } from 'discord.js'
+import discord, { Client } from 'discord.js'
 import dotenv from 'dotenv'
 import express from 'express'
 import sqlite from 'sqlite-async'
@@ -100,6 +100,7 @@ client.on('message', async message => {
 client.login(process.env.TOKEN);
 
 export {
+    discord,
     client,
     sqlite,
     Command,

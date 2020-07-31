@@ -6,5 +6,7 @@ database/logs.json
 database/main.db
 database/patch.sql
 
+sqltools*
+
 # env
 .env
