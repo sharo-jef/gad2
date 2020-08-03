@@ -5,7 +5,7 @@ import { Command, discord, sqlite } from '../index.js'
 export default class RemindCommand extends Command {
     name = 'remind';
     alias = [];
-    synopsis = `remind [option]... <date> [mention]...`;
+    synopsis = `remind [option]... <date> [mention]...\nremind --delete <id>\nremind --list`;
     examples = `*remind --channel #general --message 'REMIND' '2020-08-01T00:00:00'*\nsetup reminder`;
     description = `remider command
 
@@ -18,6 +18,12 @@ set remind message
 
 **-t, --timezone**
 set timezone [momentjs.com/timezone](https://momentjs.com/timezone/) (default: Asia/Tokyo)
+
+**-d, --delete**
+delete reminder
+
+**-l, --list**
+show list of active reminders
 
 date:
 [momentjs.com/timezone](https://momentjs.com/timezone/)
