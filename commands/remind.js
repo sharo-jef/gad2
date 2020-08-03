@@ -4,7 +4,7 @@ import { Command, discord, sqlite } from '../index.js'
 
 export default class RemindCommand extends Command {
     name = 'remind';
-    alias = [];
+    alias = ['reminder'];
     synopsis = `remind [option]... <date> [mention]...\nremind --delete <id>\nremind --list`;
     examples = `*remind --channel #general --message 'REMIND' '2020-08-01T00:00:00'*\nsetup reminder`;
     description = `remider command
