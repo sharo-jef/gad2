@@ -43,14 +43,14 @@ client.on('ready', async () => {
      * reminder
      */
     setInterval(async () => {
-        const db = await sqlite.open('./database/main.db');
+        const db = await sqlite.open('./database/main.db').catch(console.error);
         const reminderList = await db.all('select * from remind where cast(date as integer) < ? and done < 1', [new Date().getTime()]).catch(console.error);
 
         if (reminderList && reminderList.length) {
-            reminderList.forEach(async reminder => {
+            for (const reminder of reminderList) {
                 client.channels.fetch(reminder.channel).then(channel => channel.send ? channel.send(`${reminder.mentions.replace(/,/g, ' ')}\n${reminder.message}`): null);
                 await db.run('update remind set done = 1 where id = ?', reminder.id).catch(console.error);
-            });
+            }
         }
 
         db.close();

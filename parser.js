@@ -12,6 +12,7 @@ export default class Parser {
         tmp = tmp.map(token => typeof token === 'string' ? token.replace(/\[channel@(.+)\]/g, '<#$1>') : token)
         tmp = tmp.map(token => typeof token === 'string' ? token.replace(/\[mention@(.+)\]/g, '<@!$1>') : token)
         tmp = tmp.map(token => typeof token === 'string' ? token.replace(/\[mention-(.+)\]/g, '<@&$1>') : token)
+        tmp = tmp.map(token => typeof token === 'object' && token.comment ? `#${token.comment}` : token);
         console.log(tmp);
         return tmp;
     }

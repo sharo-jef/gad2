@@ -55,6 +55,13 @@ date:
             case '--timezone':
                 options.timezone = argv[++i];
                 break;
+            case '-d':
+            case '--delete':
+                const result = await this.delete(argv[++i].replace(/#/g, ''));
+                return result ? `deleted reminder(#${argv[i].replace(/#/g, '')})` : 'failed';
+            case '-l':
+            case '--list':
+                return await this.list();
             default:
                 try {
                     if (!date) {
@@ -71,12 +78,37 @@ date:
             return 'Invalid Date';
         }
 
-        const db = await sqlite.open(`${process.cwd()}/database/main.db`);
+        const db = await sqlite.open(`${process.cwd()}/database/main.db`).catch(console.error);
         const {id} = await db.get('select max(id) as id from remind').catch(console.error);
         console.log([id + 1, `${options.channel}`, `${date}`, false, options.message]);
         await db.run('insert into remind values (?, ?, ?, ?, ?, ?)', [id + 1, `${options.channel}`, `${date}`, false, options.message, options.mentions.join(',')]).catch(console.error);
+        await db.close();
         const result = `set reminder(#${id + 1}) at ${new Date(date)} to <#${options.channel}>`;
 
         return result;
+    }
+
+    async delete(id) {
+        if (!id) {
+            return false;
+        }
+        const db = await sqlite.open(`${process.cwd()}/database/main.db`).catch(console.error);
+        const {done} = await db.get('select done from remind where id = ?', [+id]).catch(console.error);
+
+        if (done) {
+            return false;
+        }
+
+        await db.run('update remind set done = 1 where id = ?', [+id]).catch(console.error);
+        await db.close();
+        return true;
+    }
+
+    async list() {
+        const db = await sqlite.open(`${process.cwd()}/database/main.db`).catch(console.error);
+        const result = await db.all('select * from remind where done < 1').catch(console.error);
+        await db.close();
+
+        return result ? result.map(reminder => `#${reminder.id} <#${reminder.channel}> ${new Date(+reminder.date)} ${reminder.message}`).join('\n') : '';
     }
 };
