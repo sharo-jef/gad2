@@ -36,7 +36,26 @@ const OutType = {
 
 const client = new Client();
 
-client.on('ready', () => console.log('bot ready'));
+client.on('ready', async () => {
+    console.log('bot ready');
+
+    /*
+     * reminder
+     */
+    setInterval(async () => {
+        const db = await sqlite.open('./database/main.db');
+        const reminderList = await db.all('select * from remind where cast(date as integer) < ? and done < 1', [new Date().getTime()]).catch(console.error);
+
+        if (reminderList && reminderList.length) {
+            reminderList.forEach(async reminder => {
+                client.channels.fetch(reminder.channel).then(channel => channel.send ? channel.send(`${reminder.mentions.replace(/,/g, ' ')}\n${reminder.message}`): null);
+                await db.run('update remind set done = 1 where id = ?', reminder.id).catch(console.error);
+            });
+        }
+
+        db.close();
+    }, 60000);
+});
 
 // command
 client.on('message', async message => {

@@ -34,8 +34,9 @@ date:
     async execute(message, argv, stdin) {
         const options = {
             timezone: 'Asia/Tokyo',
-            message: '',
-            channel: message.channel,
+            message: 'Reminder',
+            channel: message.channel.id,
+            mentions: [],
         };
 
         let date = null;
@@ -44,7 +45,7 @@ date:
             switch (argv[i]) {
             case '-c':
             case '--channel':
-                options.channel = argv[++i];
+                options.channel = argv[++i].replace(/<|#|>/g, '');
                 break;
             case '-m':
             case '--message':
@@ -55,15 +56,26 @@ date:
                 options.timezone = argv[++i];
                 break;
             default:
-                date = moment.tz(argv[i++], options.timezone).unix() * 1000;
+                try {
+                    if (!date) {
+                        date = moment.tz(argv[i], options.timezone).unix() * 1000;
+                    } else {
+                        options.mentions.push(argv[i]);
+                    }
+                } catch {}
             }
+        }
+
+        if (!date) {
+            console.error('invalid date');
+            return 'Invalid Date';
         }
 
         const db = await sqlite.open(`${process.cwd()}/database/main.db`);
         const {id} = await db.get('select max(id) as id from remind').catch(console.error);
         console.log([id + 1, `${options.channel}`, `${date}`, false, options.message]);
-        await db.run('insert into remind values (?, ?, ?, ?, ?)', [id + 1, `${options.channel}`, `${date}`, false, options.message]).catch(console.error);
-        const result = `set reminder(#${id + 1}) at ${new Date(date)} to ${options.channel}`;
+        await db.run('insert into remind values (?, ?, ?, ?, ?, ?)', [id + 1, `${options.channel}`, `${date}`, false, options.message, options.mentions.join(',')]).catch(console.error);
+        const result = `set reminder(#${id + 1}) at ${new Date(date)} to <#${options.channel}>`;
 
         return result;
     }
