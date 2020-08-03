@@ -6,7 +6,7 @@ export default class RemindCommand extends Command {
     name = 'remind';
     alias = [];
     synopsis = `remind [option]... <date> [mention]...`;
-    examples = `*remind --channel #general --message 'REMIND' 2020/08/01 0:00*\nsetup reminder`;
+    examples = `*remind --channel #general --message 'REMIND' '2020-08-01T00:00:00'*\nsetup reminder`;
     description = `remider command
 
 options:
@@ -16,7 +16,7 @@ set channel to push remind
 **-m, --message**
 set remind message
 
-**-t, ---timezone**
+**-t, --timezone**
 set timezone [momentjs.com/timezone](https://momentjs.com/timezone/) (default: Asia/Tokyo)
 
 date:
@@ -53,6 +53,7 @@ date:
             case '-t':
             case '--timezone':
                 options.timezone = argv[++i];
+                break;
             default:
                 date = moment.tz(argv[i++], options.timezone).unix() * 1000;
             }
