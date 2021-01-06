@@ -11,7 +11,7 @@
   "license": "MIT",
   "type": "module",
   "dependencies": {
-    "axios": "^0.19.2",
+    "axios": "^0.21.1",
     "basicFFmpeg": "0.0.7",
     "discord.js": "^12.2.0",
     "dotenv": "^8.2.0",
